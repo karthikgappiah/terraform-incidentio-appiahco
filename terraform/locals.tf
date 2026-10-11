@@ -1,6 +1,9 @@
 locals {
   teams = yamldecode(file("${path.module}/teams.yaml"))
 
+  # Product teams get their escalation path from the shared template.
+  product_teams = { for k, t in local.teams : k => t if !try(t.backstop, false) }
+
   # Every person named in teams.yaml, looked up once.
   emails = toset(flatten([for t in local.teams : concat(t.members, t.on_call)]))
 

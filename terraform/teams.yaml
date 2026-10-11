@@ -4,12 +4,16 @@
 # Adding a team here gives it, in one apply:
 #   - a Catalog entry, with its aliases and members
 #   - an "<Name> on-call" schedule with a weekly rotation
+#   - an escalation path built from "Team on-call, then SRE backstop"
+#
+# SRE is the backstop, so its escalation path is written by hand in escalation.tf.
 
 sre:
   name: SRE
   aliases: []
   members: [karthikgappiah@gmail.com]
   on_call: [karthikgappiah@gmail.com]
+  backstop: true
 
 streaming:
   name: Streaming
