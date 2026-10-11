@@ -11,3 +11,7 @@ Netflix alert routing on incident.io (workspace `appiahcompany`), managed by Ter
 
 - Secrets live in `.env` (mode 600, gitignored). Use them by reference only: `uv run --env-file .env`, `make plan`. Keep values out of output, and out of chat.
 - Never commit state. `terraform/*.tfstate*` is gitignored; it holds resolved IDs and is a secret in practice.
+
+## Commands
+
+- `make check`: offline lint (Terraform fmt and validate).
