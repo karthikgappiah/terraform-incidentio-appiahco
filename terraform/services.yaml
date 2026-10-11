@@ -1,0 +1,17 @@
+# Every service that can send alerts. The key is the value monitoring tools
+# put in metadata.service. owner is a key from teams.yaml.
+
+cdn-edge-network:
+  owner: cdn
+
+video-transcoding-service:
+  owner: streaming
+
+recommendation-engine:
+  owner: api
+
+user-profile-api:
+  owner: api
+
+user-datastore-postgres:
+  owner: databases
