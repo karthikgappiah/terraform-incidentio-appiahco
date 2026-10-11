@@ -1,0 +1,198 @@
+{
+  "1": {
+    "name": "Critical: Video Transcoding Failure",
+    "team": "streaming-infrastructure",
+    "data": {
+      "title": "Critical: Video Transcoding Pipeline Failure in US-EAST-1",
+      "status": "firing",
+      "description": "The video transcoding service is experiencing a complete failure. New content uploads are failing, affecting content ingestion for new releases.",
+      "source_url": "https://datadog.netflix.com/alerts/transcoding-failure-2847562",
+      "metadata": {
+        "service": "video-transcoding-service",
+        "service_tier": "tier-1-critical",
+        "region": "us-east-1",
+        "aws_region": "us-east-1",
+        "severity": "critical",
+        "impact_level": "high",
+        "environment": "production",
+        "team_owner": "streaming-infrastructure",
+        "alert_type": "service_health",
+        "affected_users_pct": "0",
+        "error_rate": "100",
+        "service_type": "backend-processing",
+        "customer_tier": "all",
+        "runbook_url": "https://wiki.netflix.com/runbooks/transcoding-pipeline",
+        "metrics": {
+          "failed_jobs": 847,
+          "queue_depth": 12453,
+          "processing_lag_minutes": 340
+        },
+        "tags": ["transcoding", "video-pipeline", "content-ingestion", "p1"],
+        "monitoring_tool": "datadog",
+        "alert_id": "dd-2847562"
+      }
+    }
+  },
+  "2": {
+    "name": "Warning: API Latency",
+    "team": "api-platform",
+    "data": {
+      "title": "Warning: User Profile API Latency Above Threshold",
+      "status": "firing",
+      "description": "P95 latency for user profile API has exceeded 500ms threshold. Currently at 847ms. Users may experience slow profile loading.",
+      "source_url": "https://prometheus.netflix.com/alerts/api-latency-profile-service",
+      "metadata": {
+        "service": "user-profile-api",
+        "service_tier": "tier-1-critical",
+        "region": "eu-west-1",
+        "aws_region": "eu-west-1",
+        "severity": "warning",
+        "impact_level": "medium",
+        "environment": "production",
+        "team_owner": "api-platform",
+        "alert_type": "performance",
+        "affected_users_pct": "12",
+        "error_rate": "0.3",
+        "service_type": "api",
+        "customer_tier": "free",
+        "runbook_url": "https://wiki.netflix.com/runbooks/api-latency",
+        "metrics": {
+          "p50_latency_ms": 234,
+          "p95_latency_ms": 847,
+          "p99_latency_ms": 1543,
+          "requests_per_second": 45000
+        },
+        "tags": ["api", "latency", "performance", "user-experience"],
+        "monitoring_tool": "prometheus",
+        "alert_id": "prom-api-lat-4456"
+      }
+    }
+  },
+  "3": {
+    "name": "Critical: CDN Edge Node Failure",
+    "team": "cdn-infrastructure",
+    "data": {
+      "title": "Critical: CDN Edge Node Cluster Failure - EU-WEST-1",
+      "status": "firing",
+      "description": "Multiple edge nodes in EU-WEST-1 are unreachable. Video streaming is degraded for users in Western Europe. Estimated 2.3M users affected.",
+      "source_url": "https://cloudwatch.netflix.com/alerts/cdn-edge-failure-eu",
+      "metadata": {
+        "service": "cdn-edge-network",
+        "service_tier": "tier-0-critical",
+        "region": "eu-west-1",
+        "aws_region": "eu-west-1",
+        "severity": "critical",
+        "impact_level": "critical",
+        "environment": "production",
+        "team_owner": "cdn-infrastructure",
+        "alert_type": "infrastructure",
+        "affected_users_pct": "34",
+        "error_rate": "67",
+        "service_type": "cdn",
+        "customer_tier": "all",
+        "runbook_url": "https://wiki.netflix.com/runbooks/cdn-edge-failure",
+        "metrics": {
+          "healthy_nodes": 12,
+          "unhealthy_nodes": 8,
+          "total_nodes": 20,
+          "traffic_failover_pct": 89,
+          "estimated_affected_users": 2300000
+        },
+        "tags": ["cdn", "streaming", "infrastructure", "p0", "customer-facing"],
+        "monitoring_tool": "cloudwatch",
+        "alert_id": "cw-cdn-7734251"
+      }
+    }
+  },
+  "4": {
+    "name": "Info: Database Replica Lag",
+    "team": "database-platform",
+    "data": {
+      "title": "Info: Read Replica Lag Detected - User Data Store",
+      "status": "firing",
+      "description": "Read replica for user data store is experiencing replication lag of 45 seconds. No immediate user impact, but reporting queries may show stale data.",
+      "source_url": "https://datadog.netflix.com/alerts/db-replica-lag-8832",
+      "metadata": {
+        "service": "user-datastore-postgres",
+        "service_tier": "tier-2",
+        "region": "us-west-2",
+        "aws_region": "us-west-2",
+        "severity": "info",
+        "impact_level": "low",
+        "environment": "production",
+        "team_owner": "database-platform",
+        "alert_type": "database",
+        "affected_users_pct": "0",
+        "error_rate": "0",
+        "service_type": "database",
+        "customer_tier": "internal",
+        "runbook_url": "https://wiki.netflix.com/runbooks/database-replication",
+        "metrics": {
+          "replication_lag_seconds": 45,
+          "replica_count": 5,
+          "affected_replicas": 1
+        },
+        "tags": ["database", "replication", "monitoring"],
+        "monitoring_tool": "datadog",
+        "alert_id": "dd-replica-8832"
+      }
+    }
+  },
+  "5": {
+    "name": "Critical: Recommendation Engine Down",
+    "team": "ml-platform",
+    "data": {
+      "title": "Critical: Recommendation Engine Total Failure",
+      "status": "firing",
+      "description": "Recommendation engine is completely down across all regions. Users seeing generic content instead of personalized recommendations. Major impact to user experience and engagement metrics.",
+      "source_url": "https://datadog.netflix.com/alerts/recommendation-engine-failure",
+      "metadata": {
+        "service": "recommendation-engine",
+        "service_tier": "tier-1-critical",
+        "region": "all-regions",
+        "aws_region": "multi-region",
+        "severity": "critical",
+        "impact_level": "high",
+        "environment": "production",
+        "team_owner": "ml-platform",
+        "alert_type": "service_health",
+        "affected_users_pct": "100",
+        "error_rate": "100",
+        "service_type": "ml-service",
+        "customer_tier": "all",
+        "runbook_url": "https://wiki.netflix.com/runbooks/recommendation-engine",
+        "metrics": {
+          "recommendation_requests_success_rate": 0,
+          "fallback_mode": "generic_content",
+          "cache_hit_rate": 23
+        },
+        "tags": ["ml", "recommendations", "user-experience", "p0", "engagement"],
+        "monitoring_tool": "datadog",
+        "alert_id": "dd-rec-engine-9923"
+      }
+    }
+  },
+  "6": {
+    "name": "Warning: Unknown Service (edge case)",
+    "team": "??? (should fallback to SRE)",
+    "_comment": "Missing team_owner and other fields - tests fallback logic!",
+    "data": {
+      "title": "Warning: High Memory Usage on Mystery Service",
+      "status": "firing",
+      "description": "A service is reporting high memory usage but service metadata is incomplete.",
+      "source_url": "https://prometheus.netflix.com/alerts/memory-high-2234",
+      "metadata": {
+        "service": "legacy-batch-processor-deprecated",
+        "region": "ap-southeast-1",
+        "severity": "warning",
+        "environment": "production",
+        "alert_type": "infrastructure",
+        "metrics": {
+          "memory_usage_pct": 94
+        },
+        "tags": ["infrastructure", "memory"],
+        "monitoring_tool": "prometheus"
+      }
+    }
+  }
+}
