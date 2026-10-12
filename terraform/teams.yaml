@@ -3,6 +3,7 @@
 #
 # Adding a team here gives it, in one apply:
 #   - a Catalog entry, with its aliases and members
+#   - an "<Name> on-call" schedule with a weekly rotation
 
 sre:
   name: SRE
