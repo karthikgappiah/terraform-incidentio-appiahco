@@ -28,3 +28,7 @@ user-datastore-postgres:
   owner: databases
   tier: tier-2
   lifecycle: production
+
+legacy-batch-processor-deprecated:
+  owner: sre
+  lifecycle: deprecated
