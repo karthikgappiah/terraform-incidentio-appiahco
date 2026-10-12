@@ -8,6 +8,25 @@ resource "incident_alert_source" "netflix_monitoring" {
 
   title       = { literal = "{{title}}" }
   description = { literal = "{{description}}" }
+
+  # Priority comes from metadata.severity, matched against the alert
+  # priorities. Anything unrecognised is treated as Urgent.
+  priority = { expression_ref = "71fdf6d6" }
+
+  named_expression {
+    name       = "71fdf6d6"
+    label      = "Priority"
+    start_from = "payload"
+    operation {
+      parse = {
+        function = "$.metadata.severity"
+        as       = "CatalogEntry[\"AlertPriority\"]"
+      }
+    }
+    fallback {
+      result = { value_literal = local.priority_urgent }
+    }
+  }
 }
 
 resource "incident_alert_attribute" "service" {

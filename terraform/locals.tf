@@ -12,6 +12,9 @@ locals {
   timezone        = "America/Los_Angeles"
   rotation_start  = "2026-10-05T16:00:00Z" # a Monday, 09:00 Pacific
   holiday_country = ["US"]
+
+  # The built-in "Urgent" alert priority.
+  priority_urgent = "01M4MXHSZM4JT0TQNKEMB9V39W"
 }
 
 data "incident_user" "by_email" {
