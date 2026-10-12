@@ -19,17 +19,16 @@ Netflix Monitoring (HTTP source)
 
 There is one source, one route and one path template. A team or a service is a row in YAML.
 
+The resources are declared in [terraform-incidentio-module-alert-routing](https://github.com/karthikgappiah/terraform-incidentio-module-alert-routing). This repo is the Netflix call to it:
+
 | File | Holds |
 | --- | --- |
 | `terraform/teams.yaml` | Every team: name, aliases, members, who is on call |
 | `terraform/services.yaml` | Every service: owner, tier, lifecycle |
-| `terraform/locals.tf` | Decodes the YAML; shared timezone, rotation start, priority |
-| `terraform/catalog.tf` | Team and Service Catalog types and entries |
-| `terraform/teams.tf` | Schedule, rotation and templated path, per team |
-| `terraform/escalation.tf` | The shared path template and the SRE backstop path |
-| `terraform/alerts.tf` | Alert source, attributes, and the one dynamic route |
-| `terraform/incident_template.tf` | What an incident from the route looks like |
+| `terraform/main.tf` | The module call: names, timezone, rotation start |
+| `terraform/moved.tf` | Maps the old inline resources into the module, so nothing is recreated |
 | `terraform/imports.tf` | Objects first built in the dashboard, adopted into state |
+| `terraform/versions.tf` | Provider pin and `claim_on_import` |
 
 ### Onboarding a team
 
@@ -59,6 +58,7 @@ The workspace was first built by hand in the dashboard, one lesson at a time, th
 5. **Ownership on the source**: Tier and Lifecycle, the deprecated service, Owner fallback
 6. **Incidents and grouping**: runbook attribute, incident template, incident creation, grouping by Service
 7. **Terraform the workspace**: `claim_on_import`, import blocks, then Payments and Ads as YAML-only changes
+8. **A module**: the design extracted to its own repo and called from here, with `moved` blocks so the plan stays empty
 
 Each step is an issue, a PR and one Conventional Commit. See `AGENTS.md`.
 
