@@ -27,7 +27,25 @@ resource "incident_catalog_type_attribute" "service_owner" {
   schema_only     = true
 }
 
-# Terraform owns team names, aliases and members.
+resource "incident_catalog_type_attribute" "service_tier" {
+  catalog_type_id = incident_catalog_type.service.id
+  name            = "Tier"
+  type            = "String"
+  array           = false
+  schema_only     = true
+}
+
+resource "incident_catalog_type_attribute" "service_lifecycle" {
+  catalog_type_id = incident_catalog_type.service.id
+  name            = "Lifecycle"
+  type            = "String"
+  array           = false
+  schema_only     = true
+}
+
+# Terraform owns team names, aliases and members. The "Escalation paths"
+# attribute is filled in by incident.io from each path's team, so it is
+# left out of managed_attributes.
 resource "incident_catalog_entries" "team" {
   id                 = incident_catalog_type.team.id
   managed_attributes = ["members"]
@@ -55,9 +73,13 @@ resource "incident_catalog_entries" "service" {
     for k, s in local.services : k => {
       name    = k
       aliases = try(s.aliases, [])
-      attribute_values = {
-        (incident_catalog_type_attribute.service_owner.id) = { value = s.owner }
-      }
+      attribute_values = merge(
+        {
+          (incident_catalog_type_attribute.service_owner.id)     = { value = s.owner }
+          (incident_catalog_type_attribute.service_lifecycle.id) = { value = s.lifecycle }
+        },
+        can(s.tier) ? { (incident_catalog_type_attribute.service_tier.id) = { value = s.tier } } : {},
+      )
     }
   }
 }
