@@ -100,5 +100,15 @@ resource "incident_alert_route" "netflix_production" {
     when_alert_joins_group = { mode = "on_priority_increase" }
   }
 
+  # Grouping and incidents come later (lesson 4c); for now the route only pages.
+  grouping_config = {
+    default = { enabled = false }
+  }
+
+  incident_config = {
+    enabled          = false
+    condition_groups = []
+  }
+
   message_config = {}
 }
