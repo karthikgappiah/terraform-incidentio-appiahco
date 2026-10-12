@@ -1,0 +1,35 @@
+# Every team at Netflix. The key is the team's ID in the Catalog (its
+# external ID), which alerts and services refer to.
+#
+# Adding a team here gives it, in one apply:
+#   - a Catalog entry, with its aliases and members
+
+sre:
+  name: SRE
+  aliases: []
+  members: [karthikgappiah@gmail.com]
+  on_call: [karthikgappiah@gmail.com]
+
+streaming:
+  name: Streaming
+  aliases: [streaming-infrastructure]
+  members: [karthikgappiah@gmail.com]
+  on_call: [karthikgappiah@gmail.com]
+
+api:
+  name: API
+  aliases: [api-platform, ml-platform]
+  members: [karthikgappiah@gmail.com]
+  on_call: [karthikgappiah@gmail.com]
+
+cdn:
+  name: CDN
+  aliases: [cdn-infrastructure]
+  members: [karthikgappiah@gmail.com]
+  on_call: [karthikgappiah@gmail.com]
+
+databases:
+  name: Databases
+  aliases: [database-platform]
+  members: [karthikgappiah@gmail.com]
+  on_call: [karthikgappiah@gmail.com]
