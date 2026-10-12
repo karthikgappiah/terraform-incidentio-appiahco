@@ -163,14 +163,31 @@ resource "incident_alert_route" "netflix_production" {
     when_alert_joins_group = { mode = "on_priority_increase" }
   }
 
-  # Grouping and incidents come later (lesson 4c); for now the route only pages.
+  # One incident per Service per 30 minutes; each new alert extends it.
   grouping_config = {
-    default = { enabled = false }
+    default = {
+      enabled        = true
+      ai_enabled     = false
+      grouping_keys  = [{ reference = "alert.attributes.${incident_alert_attribute.service.id}" }]
+      window_seconds = 1800
+      window_type    = "rolling"
+    }
   }
 
+  # Only Urgent and above open an incident.
   incident_config = {
-    enabled          = false
-    condition_groups = []
+    enabled              = true
+    auto_decline_enabled = true
+    condition_groups = [{
+      conditions = [{
+        subject        = "alert.priority"
+        operation      = "gte"
+        param_bindings = [{ value = { literal = local.priority_urgent } }]
+      }]
+    }]
+    incident_template = {
+      value = { literal = incident_incident_template.netflix_alert_incident.id }
+    }
   }
 
   message_config = {}
