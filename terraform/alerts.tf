@@ -36,6 +36,13 @@ resource "incident_alert_attribute" "service" {
   required = false
 }
 
+resource "incident_alert_attribute" "runbook" {
+  name     = "Runbook"
+  type     = "String"
+  array    = false
+  required = false
+}
+
 locals {
   # The built-in Team alert attribute.
   team_attribute_id = "01M4MXHV3FB9PK0GPN2VKXFRGH"
@@ -96,6 +103,25 @@ resource "incident_alert_source_attribute" "team" {
     }
     fallback {
       expression_ref = "5e5b6d41"
+    }
+  }
+}
+
+resource "incident_alert_source_attribute" "runbook" {
+  alert_source_id    = incident_alert_source.netflix_monitoring.id
+  alert_attribute_id = incident_alert_attribute.runbook.id
+  merge_strategy     = "first_wins"
+  expression_ref     = "44cb4383"
+
+  named_expression {
+    name       = "44cb4383"
+    label      = "Runbook"
+    start_from = "payload"
+    operation {
+      parse = {
+        function = "$.metadata.runbook_url"
+        as       = "String"
+      }
     }
   }
 }
