@@ -15,3 +15,4 @@ Netflix alert routing on incident.io (workspace `appiahcompany`), managed by Ter
 ## Commands
 
 - `make check`: offline lint (Terraform fmt and validate).
+- `scripts/send_alerts.py`: fire the six Netflix scenarios at the alert source. Each one posts to Slack and pages people. Run it with `uv run --env-file .env --with requests scripts/send_alerts.py`.
