@@ -1,5 +1,6 @@
 locals {
-  teams = yamldecode(file("${path.module}/teams.yaml"))
+  teams    = yamldecode(file("${path.module}/teams.yaml"))
+  services = yamldecode(file("${path.module}/services.yaml"))
 
   # Product teams get their escalation path from the shared template.
   product_teams = { for k, t in local.teams : k => t if !try(t.backstop, false) }
