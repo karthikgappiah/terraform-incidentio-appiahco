@@ -62,12 +62,27 @@ resource "incident_alert_source_attribute" "service" {
 }
 
 # Team: metadata.team_owner, matched against the Team Catalog (names or
-# aliases).
+# aliases). If that's missing or unknown, fall back to the service's Owner.
 resource "incident_alert_source_attribute" "team" {
   alert_source_id    = incident_alert_source.netflix_monitoring.id
   alert_attribute_id = local.team_attribute_id
   merge_strategy     = "first_wins"
   expression_ref     = "eda36efa"
+
+  named_expression {
+    name       = "5e5b6d41"
+    label      = "expression-5e5b6d41"
+    start_from = "payload"
+    operation {
+      parse = {
+        function = "$.metadata.service"
+        as       = incident_alert_attribute.service.type
+      }
+    }
+    operation {
+      navigate = { to = incident_catalog_type_attribute.service_owner.id }
+    }
+  }
 
   named_expression {
     name       = "eda36efa"
@@ -78,6 +93,9 @@ resource "incident_alert_source_attribute" "team" {
         function = "$.metadata.team_owner"
         as       = "CatalogEntry[\"${incident_catalog_type.team.id}\"]"
       }
+    }
+    fallback {
+      expression_ref = "5e5b6d41"
     }
   }
 }
