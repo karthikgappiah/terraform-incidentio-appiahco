@@ -1,0 +1,22 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: "1.9.8"
+      # Fetches the provider and the routing module; needs no credentials.
+      - run: terraform -chdir=terraform init -backend=false -input=false
+      # fmt, validate, shell syntax and Python compile. No API calls, no secrets.
+      - run: make check
