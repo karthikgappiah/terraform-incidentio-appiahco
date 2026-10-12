@@ -14,9 +14,11 @@ Netflix alert routing on incident.io (workspace `appiahcompany`), managed by Ter
 
 ## Commands
 
-- `make check`: offline lint (Terraform fmt and validate).
+- `make check`: offline lint (Terraform fmt and validate, shell syntax, Python compile). The pre-commit hook runs it; install with `make hooks`.
+- `make status`: firing alerts, live escalations, open incidents; all 0 when clean.
 - `make plan` / `make drift` / `make apply`: Terraform with `.env` loaded. `plan` and `drift` leave the account untouched.
 - `scripts/send_alerts.py`: fire the six Netflix scenarios at the alert source. Each one posts to Slack and pages people. Run it with `uv run --env-file .env --with requests scripts/send_alerts.py`.
 - `scripts/send_payments_alert.py`: one critical Payments alert, to prove a team onboarded in YAML alone gets paged.
 - `scripts/fire_and_resolve.py`: fire one scenario, wait, then resolve it with the same dedup key to watch auto-cancel and auto-decline.
 - `scripts/send_ads_alert.py`: one critical Ads alert with no team_owner; the Catalog says who owns the service.
+- `scripts/inspect.sh status|firing|route|source`: compact workspace summaries. Reach for these before `inc api` on routes or sources.
