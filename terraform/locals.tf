@@ -21,3 +21,19 @@ data "incident_user" "by_email" {
   for_each = local.emails
   email    = each.value
 }
+
+data "incident_severity" "critical" {
+  name = "Critical"
+}
+
+data "incident_severity" "major" {
+  name = "Major"
+}
+
+data "incident_severity" "minor" {
+  name = "Minor"
+}
+
+data "incident_custom_field" "affected_teams" {
+  name = "Affected teams"
+}

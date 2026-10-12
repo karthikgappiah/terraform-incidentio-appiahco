@@ -1,7 +1,7 @@
 # Every service that can send alerts. The key is the value monitoring tools
 # put in metadata.service. owner is a key from teams.yaml.
 #
-# tier is how critical the service is (tier-0 is the most critical).
+# tier drives incident severity: tier-0 Critical, tier-1 Major, else Minor.
 # lifecycle is production or deprecated.
 
 cdn-edge-network:
