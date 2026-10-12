@@ -19,7 +19,7 @@ Netflix Monitoring (HTTP source)
 
 There is one source, one route and one path template. A team or a service is a row in YAML.
 
-The resources are declared in [terraform-incidentio-module-alert-routing](https://github.com/karthikgappiah/terraform-incidentio-module-alert-routing). This repo is the Netflix call to it:
+The resources are declared in [terraform-incidentio-alert-routing](https://github.com/karthikgappiah/terraform-incidentio-alert-routing). This repo is the Netflix call to it:
 
 | File | Holds |
 | --- | --- |
