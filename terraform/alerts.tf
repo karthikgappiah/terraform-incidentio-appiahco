@@ -62,3 +62,43 @@ resource "incident_alert_source_attribute" "team" {
     }
   }
 }
+
+# One route for every team. It never names a team: it follows the alert's
+# Team to that team's escalation path, and falls back to SRE.
+resource "incident_alert_route" "netflix_production" {
+  name            = "Netflix production"
+  enabled         = true
+  is_private      = false
+  owning_team_ids = [incident_catalog_entries.team.entries["sre"].id]
+
+  alert_sources = [{
+    alert_source_id  = incident_alert_source.netflix_monitoring.id
+    condition_groups = []
+  }]
+  condition_groups = []
+
+  expressions = [{
+    label          = "Alert → Attributes → Team  → Escalation paths"
+    reference      = "01M4N8BWY2C6H2S6JD6EKCTC9F"
+    root_reference = "alert.attributes.${local.team_attribute_id}"
+    operations = [{
+      operation_type = "navigate"
+      navigate       = { reference = "catalog_attribute[\"escalation_paths\"]" }
+    }]
+    else_branch = {
+      result = { array_value = [{ literal = incident_escalation_path.sre.id }] }
+    }
+  }]
+
+  escalation_config = {
+    auto_cancel_escalations = true
+    escalation_targets = [{
+      escalation_paths = {
+        array_value = [{ reference = "expressions[\"01M4N8BWY2C6H2S6JD6EKCTC9F\"]" }]
+      }
+    }]
+    when_alert_joins_group = { mode = "on_priority_increase" }
+  }
+
+  message_config = {}
+}
