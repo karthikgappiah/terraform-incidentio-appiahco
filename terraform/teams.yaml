@@ -44,3 +44,9 @@ payments:
   aliases: [payments-platform]
   members: [karthikgappiah@gmail.com]
   on_call: [karthikgappiah@gmail.com]
+
+ads:
+  name: Ads
+  aliases: [ads-engineering]
+  members: [karthikgappiah@gmail.com]
+  on_call: [karthikgappiah@gmail.com]
