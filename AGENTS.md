@@ -7,6 +7,12 @@ Netflix alert routing on incident.io (workspace `appiahcompany`), managed by Ter
 - **Atomic**: every issue, commit and PR covers one concern. Never bundle unrelated changes.
 - **Conventional Commits**: every issue title, commit message and PR title follows the [Conventional Commits](https://www.conventionalcommits.org) spec (`type(scope)!: description`).
 
+## Architecture
+
+- `terraform/teams.yaml` and `services.yaml` are the source of truth. `main.tf` passes them to the `terraform-incidentio-module-alert-routing` module, which builds the Catalog, schedules, paths, source, route and incident template.
+- Onboarding a team or service is a YAML edit plus `make apply`. Changes to how routing works belong in the module repo, then a version bump of `ref=` in `main.tf`.
+- `moved.tf` records the inline-to-module move. Keep it until every state that predates the move has been applied.
+
 ## Secrets
 
 - Secrets live in `.env` (mode 600, gitignored). Use them by reference only: `uv run --env-file .env`, `make plan`. Keep values out of output, and out of chat.
