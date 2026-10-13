@@ -1,11 +1,14 @@
-# check runs offline. plan, drift and apply call incident.io, with secrets read from .env.
-.PHONY: check plan drift apply
+# check runs offline (and in the pre-commit hook, .githooks/pre-commit).
+# plan, drift, apply and status call incident.io, with secrets read from .env.
+.PHONY: check plan drift apply status hooks
 
 TF = cd terraform && set -a && . ../.env && set +a && terraform
 
 check:
 	terraform -chdir=terraform fmt -check -recursive
 	terraform -chdir=terraform validate -no-color
+	bash -n scripts/inspect.sh
+	python3 -m py_compile scripts/*.py
 
 # Leaves the account untouched: imports don't claim (lock) dashboard objects.
 plan:
@@ -17,3 +20,10 @@ drift:
 
 apply:
 	$(TF) apply
+
+# Firing alerts, live escalations, open incidents: all 0 when the workspace is clean.
+status:
+	scripts/inspect.sh status
+
+hooks:
+	git config core.hooksPath .githooks
