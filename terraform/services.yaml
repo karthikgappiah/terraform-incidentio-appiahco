@@ -37,3 +37,8 @@ payments-gateway:
   owner: payments
   tier: tier-1
   lifecycle: production
+
+ads-delivery-service:
+  owner: ads
+  tier: tier-1
+  lifecycle: production
