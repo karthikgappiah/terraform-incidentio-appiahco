@@ -38,3 +38,9 @@ databases:
   aliases: [database-platform]
   members: [karthikgappiah@gmail.com]
   on_call: [karthikgappiah@gmail.com]
+
+payments:
+  name: Payments
+  aliases: [payments-platform]
+  members: [karthikgappiah@gmail.com]
+  on_call: [karthikgappiah@gmail.com]

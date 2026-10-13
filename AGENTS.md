@@ -17,3 +17,4 @@ Netflix alert routing on incident.io (workspace `appiahcompany`), managed by Ter
 - `make check`: offline lint (Terraform fmt and validate).
 - `make plan` / `make drift` / `make apply`: Terraform with `.env` loaded. `plan` and `drift` leave the account untouched.
 - `scripts/send_alerts.py`: fire the six Netflix scenarios at the alert source. Each one posts to Slack and pages people. Run it with `uv run --env-file .env --with requests scripts/send_alerts.py`.
+- `scripts/send_payments_alert.py`: one critical Payments alert, to prove a team onboarded in YAML alone gets paged.

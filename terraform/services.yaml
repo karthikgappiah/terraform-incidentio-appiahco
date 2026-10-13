@@ -32,3 +32,8 @@ user-datastore-postgres:
 legacy-batch-processor-deprecated:
   owner: sre
   lifecycle: deprecated
+
+payments-gateway:
+  owner: payments
+  tier: tier-1
+  lifecycle: production
