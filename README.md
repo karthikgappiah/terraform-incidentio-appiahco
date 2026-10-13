@@ -1,10 +1,12 @@
 # terraform-incidentio-appiahco
 
-Netflix alert routing on incident.io (workspace `appiahcompany`), managed by Terraform. This is the Terraform behind the Solutions Engineer take-home demo.
+[![CI](https://github.com/karthikgappiah/terraform-incidentio-appiahco/actions/workflows/ci.yml/badge.svg)](https://github.com/karthikgappiah/terraform-incidentio-appiahco/actions/workflows/ci.yml)
 
-## What it does
+Infrastructure as code for Netflix alert routing on [incident.io](https://incident.io) (workspace `appiahcompany`). It declares the alert source, the on-call model, the Catalog, the route and the incident template, so the whole path from monitoring alert to page can be reviewed, planned and applied like any other change.
 
-An alert from Netflix's monitoring tool takes one path:
+## Overview
+
+An alert from the monitoring tool takes one path:
 
 ```
 Netflix Monitoring (HTTP source)
@@ -17,51 +19,87 @@ Netflix Monitoring (HTTP source)
   → incident     Urgent only; severity from the Service's Tier; grouped by Service for 30m
 ```
 
-There is one source, one route and one path template. A team or a service is a row in YAML.
+There is one source, one route and one escalation path template. A team or a service is a row in YAML.
 
-The resources are declared in [terraform-incidentio-alert-routing](https://github.com/karthikgappiah/terraform-incidentio-alert-routing). This repo is the Netflix call to it:
+The resources are defined in the reusable module [terraform-incidentio-alert-routing](https://github.com/karthikgappiah/terraform-incidentio-alert-routing). This repository is the Netflix configuration that calls it.
 
-| File | Holds |
+## Repository layout
+
+| Path | Purpose |
 | --- | --- |
 | `terraform/teams.yaml` | Every team: name, aliases, members, who is on call |
 | `terraform/services.yaml` | Every service: owner, tier, lifecycle |
 | `terraform/main.tf` | The module call: names, timezone, rotation start |
-| `terraform/moved.tf` | Maps the old inline resources into the module, so nothing is recreated |
-| `terraform/imports.tf` | Objects first built in the dashboard, adopted into state |
-| `terraform/versions.tf` | Provider pin and `claim_on_import` |
+| `terraform/moved.tf` | `moved` blocks mapping earlier inline resources into the module, so nothing is recreated |
+| `terraform/imports.tf` | `import` blocks adopting objects first created in the dashboard |
+| `terraform/versions.tf` | Provider pin and the `claim_on_import` variable |
+| `scripts/` | Test alert senders and workspace inspection helpers |
+| `Makefile` | `check`, `plan`, `drift`, `apply`, `status` |
 
-### Onboarding a team
+## Prerequisites
 
-Add a block to `teams.yaml` and its services to `services.yaml`, then `make apply`. Ads and Payments were onboarded this way, with no change to the route, source or templates.
+- Terraform 1.7 or later
+- An incident.io API key with permission to manage the resources above, exported as `INCIDENT_API_KEY` or stored in a gitignored `.env`
+- Python 3 with [uv](https://docs.astral.sh/uv/) to run the test alert scripts (optional)
 
-## Running it
-
-Needs Terraform 1.7 or later and an incident.io API key in `.env` as `INCIDENT_API_KEY` (gitignored, never printed).
+## Usage
 
 ```bash
-make check    # offline lint, no API calls
-make plan     # compares code to the workspace, leaves it untouched
+make check    # fmt and validate; offline, no API calls
+make plan     # compare code to the workspace; changes nothing
 make drift    # exit 0 when matching, 2 when drifted
-make apply    # the only target that changes the account
+make apply    # the only target that changes the workspace
 ```
 
-`make plan` passes `claim_on_import=false` so reviewing a plan never locks dashboard objects. `scripts/` fires the six take-home scenarios plus Payments and Ads alerts; those post to Slack and page people.
+`make plan` runs with `claim_on_import=false`, so reviewing a plan never locks objects that are still managed in the dashboard.
 
-## How it was built
+## Configuration
 
-The workspace was first built by hand in the dashboard, one lesson at a time, then adopted into Terraform. The history re-tells that build-up as one reviewed change per step, in the order the pieces were learned:
+### Onboard a team
 
-1. **Foundations**: provider pin, `make check`, the HTTP alert source, the six scenarios
-2. **The on-call model**: Team catalog, schedules and rotations, the SRE path, the team-then-SRE template
-3. **Catalog and one dynamic route**: Service type, Team and Service attributes, the route
-4. **Priority and urgency**: priority from severity, urgency decided by the path
-5. **Ownership on the source**: Tier and Lifecycle, the deprecated service, Owner fallback
-6. **Incidents and grouping**: runbook attribute, incident template, incident creation, grouping by Service
-7. **Terraform the workspace**: `claim_on_import`, import blocks, then Payments and Ads as YAML-only changes
-8. **A module**: the design extracted to its own repo and called from here, with `moved` blocks so the plan stays empty
+Add the team to `terraform/teams.yaml` and its services to `terraform/services.yaml`, then run `make plan` and `make apply`. The route, source and templates are not touched.
 
-Each step is an issue, a PR and one Conventional Commit. See `AGENTS.md`.
+```yaml
+# teams.yaml
+payments:
+  name: Payments
+  aliases: [payments-platform]
+  members: [oncall@example.com]
+  on_call: [oncall@example.com]
+```
 
-## Provenance
+```yaml
+# services.yaml
+checkout-api:
+  owner: payments
+  tier: tier-1
+  lifecycle: production
+```
 
-`scripts/send_alerts.py` and `scripts/alerts.json` come unchanged from the incident.io take-home kit.
+### Change behaviour
+
+Names, timezone, rotation start and holiday calendars are inputs of the module call in `terraform/main.tf`. See the module's [input reference](https://github.com/karthikgappiah/terraform-incidentio-alert-routing#inputs) for the rest.
+
+### Upgrade the module
+
+Change the `ref` in the module `source` to a newer tag, run `make plan`, and review the diff before applying.
+
+## Testing alerts
+
+`scripts/` contains senders for sample alert scenarios, including Payments and Ads. They post to the real alert source, so each one notifies Slack and pages the on-call engineer. Run them against a workspace where that is acceptable.
+
+```bash
+uv run --env-file .env --with requests scripts/send_alerts.py
+```
+
+## Continuous integration
+
+Every push and pull request runs `make check` through GitHub Actions. Applies are run manually with `make apply`.
+
+## Contributing
+
+Changes are made by pull request. Issue titles, commit messages and PR titles follow [Conventional Commits](https://www.conventionalcommits.org), and each covers one concern. See [AGENTS.md](AGENTS.md) for the working conventions.
+
+## Notes
+
+`scripts/send_alerts.py` and `scripts/alerts.json` are the vendor-provided sample alert sender and payloads, kept unchanged.
