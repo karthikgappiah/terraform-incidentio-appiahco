@@ -4,7 +4,7 @@
 # incident template.
 
 module "alert_routing" {
-  source = "github.com/karthikgappiah/terraform-incidentio-module-alert-routing?ref=v0.1.0"
+  source = "github.com/karthikgappiah/terraform-incidentio-alert-routing?ref=v0.1.1"
 
   teams    = yamldecode(file("${path.module}/teams.yaml"))
   services = yamldecode(file("${path.module}/services.yaml"))

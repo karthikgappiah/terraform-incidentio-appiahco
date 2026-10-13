@@ -9,7 +9,7 @@ Netflix alert routing on incident.io (workspace `appiahcompany`), managed by Ter
 
 ## Architecture
 
-- `terraform/teams.yaml` and `services.yaml` are the source of truth. `main.tf` passes them to the `terraform-incidentio-module-alert-routing` module, which builds the Catalog, schedules, paths, source, route and incident template.
+- `terraform/teams.yaml` and `services.yaml` are the source of truth. `main.tf` passes them to the `terraform-incidentio-alert-routing` module, which builds the Catalog, schedules, paths, source, route and incident template.
 - Onboarding a team or service is a YAML edit plus `make apply`. Changes to how routing works belong in the module repo, then a version bump of `ref=` in `main.tf`.
 - `moved.tf` records the inline-to-module move. Keep it until every state that predates the move has been applied.
 
